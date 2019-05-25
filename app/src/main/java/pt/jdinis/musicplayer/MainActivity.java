@@ -6,6 +6,7 @@ import android.view.View;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
 
 public class MainActivity extends AppCompatActivity {
     private static SpecialBottomNavigationView bottomNavigationView;
@@ -18,10 +19,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public SpecialBottomNavigationView getBottomNavigationView() {
-        if (Constants.SelectedTab == -1) {
-            Constants.SelectedTab = R.id.menu_item_home;
-        }
-
         if (bottomNavigationView == null) {
             try {
                 bottomNavigationView = getMainView().findViewById(R.id.bottom_navigation_view);
@@ -32,13 +29,14 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        bottomNavigationView.setSelectedItemId(Constants.SelectedTab);
+        bottomNavigationView.setSelectedItemId(Constants.SelectedTabID);
         return bottomNavigationView;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
 
         ActionBar supportActionBar = null;
@@ -59,18 +57,21 @@ public class MainActivity extends AppCompatActivity {
 
         if (bottomNavigationView == null)
             getBottomNavigationView();
+
+        ViewPager viewPager = findViewById(R.id.view_pager);
+        viewPager.setAdapter(new MyFragmentPageAdapter(getSupportFragmentManager()));
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putInt(Constants.SELECTED_TAB, Constants.SelectedTab);
+        outState.putInt(Constants.SELECTED_TAB, Constants.SelectedTabID);
         super.onSaveInstanceState(outState);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        Constants.SelectedTab = savedInstanceState.getInt(Constants.SELECTED_TAB);
-        getBottomNavigationView().setSelectedItemId(Constants.SelectedTab);
+        Constants.SelectedTabID = savedInstanceState.getInt(Constants.SELECTED_TAB);
+
     }
 }

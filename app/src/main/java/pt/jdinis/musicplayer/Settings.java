@@ -8,14 +8,14 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-public class Playlists extends Fragment {
-    public static Playlists newInstance() {
-        return new Playlists();
+public class Settings extends Fragment {
+    public static Settings newInstance() {
+        return new Settings();
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_playlists, container, false);
+        return inflater.inflate(R.layout.fragment_settings, container, false);
     }
 }
