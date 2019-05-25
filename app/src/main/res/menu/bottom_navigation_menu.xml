@@ -4,21 +4,31 @@
     <item
         android:icon="@drawable/ic_home"
         android:title="@string/bottom_navigation_home"
+        android:id="@+id/menu_item_home"
+        android:enabled="true"
         app:showAsAction="ifRoom" />
     <item
         android:icon="@drawable/ic_playlist"
         android:title="@string/bottom_navigation_playlists"
+        android:id="@+id/menu_item_playlists"
+        android:enabled="true"
         app:showAsAction="ifRoom" />
     <item
         android:icon="@drawable/ic_heart"
         android:title="@string/bottom_navigation_favorites"
+        android:id="@+id/menu_item_favorites"
+        android:enabled="true"
         app:showAsAction="ifRoom" />
     <item
         android:icon="@drawable/ic_recent"
         android:title="@string/bottom_navigation_my_music"
+        android:id="@+id/menu_item_mymusic"
+        android:enabled="true"
         app:showAsAction="ifRoom" />
     <item
         android:icon="@drawable/ic_settings"
         android:title="@string/bottom_navigation_settings"
+        android:id="@+id/menu_item_settings"
+        android:enabled="true"
         app:showAsAction="ifRoom" />
 </menu>
