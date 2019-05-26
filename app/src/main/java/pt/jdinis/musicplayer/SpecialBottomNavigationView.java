@@ -5,7 +5,6 @@ import android.util.AttributeSet;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
-import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -13,34 +12,24 @@ public class SpecialBottomNavigationView extends BottomNavigationView {
 
     public SpecialBottomNavigationView(final Context context) {
         super(context);
-
-        this.setOnNavigationItemSelectedListener(new OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                ((ViewPager) (((MainActivity) context).findViewById(R.id.view_pager))).setCurrentItem(Constants.getSelectedTabID(menuItem.getItemId()));
-                return true;
-            }
-        });
+        setOnNavigationItemSelectedListener(context);
     }
 
     public SpecialBottomNavigationView(final Context context, AttributeSet attrs) {
         super(context, attrs);
-
-        this.setOnNavigationItemSelectedListener(new OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                ((ViewPager) (((MainActivity) context).findViewById(R.id.view_pager))).setCurrentItem(Constants.getSelectedTabID(menuItem.getItemId()));
-                return true;
-            }
-        });
+        setOnNavigationItemSelectedListener(context);
     }
 
-    public SpecialBottomNavigationView(final Context context, AttributeSet attrs, int defStyleAttr) {
+    public SpecialBottomNavigationView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        setOnNavigationItemSelectedListener(new OnNavigationItemSelectedListener() {
+        setOnNavigationItemSelectedListener(context);
+    }
+
+    private void setOnNavigationItemSelectedListener(final Context context) {
+        super.setOnNavigationItemSelectedListener(new OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                ((ViewPager) (((MainActivity) context).findViewById(R.id.view_pager))).setCurrentItem(Constants.getSelectedTabID(menuItem.getItemId()));
+                MainActivity.getViewPager().setCurrentItem(Constants.getSelectedFragmentID(menuItem.getItemId()));
                 return true;
             }
         });

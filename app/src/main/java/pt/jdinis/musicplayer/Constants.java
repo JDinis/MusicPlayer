@@ -5,8 +5,8 @@ class Constants {
     static final String MAINACTIVITY_TAG = "MainActivity";
     static int SelectedTabID = 0;
 
-    public static int getSelectedTabID(int selectedTabID) {
-        switch (selectedTabID) {
+    public static int getSelectedFragmentID(int selectedMenuID) {
+        switch (selectedMenuID) {
             case R.id.menu_item_home:
                 return 0;
             case R.id.menu_item_playlists:
@@ -18,7 +18,7 @@ class Constants {
             case R.id.menu_item_settings:
                 return 4;
             default:
-                return -1;
+                return 0;
         }
     }
 }

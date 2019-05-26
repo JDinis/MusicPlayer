@@ -4,21 +4,48 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 public class MainActivity extends AppCompatActivity {
     private static SpecialBottomNavigationView bottomNavigationView;
-    private View mainView;
+    private static ViewPager viewPager;
+    private static View mainView;
 
-    public View getMainView() throws NullPointerException {
+    public static View getMainView() throws NullPointerException {
         if (mainView == null)
             throw new NullPointerException();
         return mainView;
     }
 
-    public SpecialBottomNavigationView getBottomNavigationView() {
+    public static ViewPager getViewPager() {
+        if (viewPager == null) {
+            viewPager = getMainView().findViewById(R.id.view_pager);
+
+            // Stops page swipes
+            viewPager.beginFakeDrag();
+
+            viewPager.setPageTransformer(false, new ViewPager.PageTransformer() {
+                @Override
+                public void transformPage(@NonNull View page, float position) {
+                    // Crossfade according to guidelines: https://developer.android.com/training/animation/reveal-or-hide-view
+                    page.setAlpha(0f);
+                    page.setVisibility(View.VISIBLE);
+
+                    // Start Animation for a short period of time
+                    page.animate()
+                            .alpha(1f)
+                            .setDuration(page.getResources().getInteger(android.R.integer.config_shortAnimTime));
+                }
+            });
+        }
+
+        return viewPager;
+    }
+
+    public static SpecialBottomNavigationView getBottomNavigationView() {
         if (bottomNavigationView == null) {
             try {
                 bottomNavigationView = getMainView().findViewById(R.id.bottom_navigation_view);
@@ -58,12 +85,12 @@ public class MainActivity extends AppCompatActivity {
         if (bottomNavigationView == null)
             getBottomNavigationView();
 
-        ViewPager viewPager = findViewById(R.id.view_pager);
-        viewPager.setAdapter(new MyFragmentPageAdapter(getSupportFragmentManager()));
+        if (getViewPager().getAdapter() == null)
+            getViewPager().setAdapter(new MyFragmentPageAdapter(getSupportFragmentManager()));
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putInt(Constants.SELECTED_TAB, Constants.SelectedTabID);
         super.onSaveInstanceState(outState);
     }
@@ -72,6 +99,5 @@ public class MainActivity extends AppCompatActivity {
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         Constants.SelectedTabID = savedInstanceState.getInt(Constants.SELECTED_TAB);
-
     }
 }
