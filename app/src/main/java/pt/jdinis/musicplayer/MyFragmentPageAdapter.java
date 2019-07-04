@@ -5,8 +5,15 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 public class MyFragmentPageAdapter extends FragmentPagerAdapter {
+    private FragmentManager fragmentManager;
+
     MyFragmentPageAdapter(FragmentManager fm) {
         super(fm);
+        fragmentManager = fm;
+    }
+
+    public FragmentManager getFragmentManager() {
+        return fragmentManager;
     }
 
     @Override
@@ -19,7 +26,7 @@ public class MyFragmentPageAdapter extends FragmentPagerAdapter {
             case 2:
                 return Favorites.newInstance();
             case 3:
-                return MyMysic.newInstance();
+                return MyMusic.newInstance();
             case 4:
                 return Settings.newInstance();
             default:

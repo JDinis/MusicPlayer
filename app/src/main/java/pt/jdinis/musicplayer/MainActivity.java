@@ -1,5 +1,6 @@
 package pt.jdinis.musicplayer;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -9,10 +10,12 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
+
 public class MainActivity extends AppCompatActivity {
     private static SpecialBottomNavigationView bottomNavigationView;
     private static ViewPager viewPager;
     private static View mainView;
+    private static boolean firstRun = true;
 
     public static View getMainView() throws NullPointerException {
         if (mainView == null)
@@ -24,8 +27,8 @@ public class MainActivity extends AppCompatActivity {
         if (viewPager == null) {
             viewPager = getMainView().findViewById(R.id.view_pager);
 
-            // Stops page swipes
-            viewPager.beginFakeDrag();
+            // Stops page swipes - Future Option
+            //viewPager.beginFakeDrag();
 
             viewPager.setPageTransformer(false, new ViewPager.PageTransformer() {
                 @Override
@@ -38,6 +41,21 @@ public class MainActivity extends AppCompatActivity {
                     page.animate()
                             .alpha(1f)
                             .setDuration(page.getResources().getInteger(android.R.integer.config_shortAnimTime));
+                }
+            });
+
+            viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                }
+
+                @Override
+                public void onPageSelected(int position) {
+                    bottomNavigationView.setSelectedItemId(Constants.getSelectedMenuID(position));
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int state) {
                 }
             });
         }
@@ -90,14 +108,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putInt(Constants.SELECTED_TAB, Constants.SelectedTabID);
-        super.onSaveInstanceState(outState);
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
     }
 
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        Constants.SelectedTabID = savedInstanceState.getInt(Constants.SELECTED_TAB);
+    protected void onResume() {
+        getViewPager().setCurrentItem(Constants.SelectedTabID);
+        getBottomNavigationView();
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        if (getViewPager().getCurrentItem() != Constants.SelectedTabID)
+            Constants.SelectedTabID = getViewPager().getCurrentItem();
+
+        super.onPause();
     }
 }

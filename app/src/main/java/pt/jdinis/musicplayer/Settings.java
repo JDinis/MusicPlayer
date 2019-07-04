@@ -19,9 +19,4 @@ public class Settings extends Fragment {
         setRetainInstance(true);
         return inflater.inflate(R.layout.fragment_settings, container, false);
     }
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
 }
