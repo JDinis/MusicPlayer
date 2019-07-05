@@ -1,7 +1,5 @@
 package pt.jdinis.musicplayer;
 
-import android.view.View;
-
 class Constants {
     static final String SELECTED_TAB = "SELECTED_TAB";
     static final String MAINACTIVITY_TAG = "MainActivity";
@@ -16,7 +14,6 @@ class Constants {
             case R.id.menu_item_favorites:
                 return 2;
             case R.id.menu_item_mymusic:
-                MainActivity.getBottomNavigationView().setVisibility(View.GONE);
                 return 3;
             case R.id.menu_item_settings:
                 return 4;

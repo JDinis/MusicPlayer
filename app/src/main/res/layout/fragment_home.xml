@@ -8,14 +8,19 @@
     tools:openDrawer="start"
     tools:context=".Home">
 
-    <ImageView
-        android:id="@+id/imageView"
+    <pt.jdinis.musicplayer.SpecialBottomNavigationView
+        android:id="@+id/bottom_navigation_view"
+        style="@style/Widget.MaterialComponents.BottomNavigationView.Colored"
         android:layout_width="match_parent"
-        android:layout_height="128dp"
-        android:contentDescription="@string/app_name"
-        android:scaleType="fitXY"
-        android:src="@color/design_default_color_primary"
+        android:layout_height="@dimen/bottom_navigation_height"
+        android:isScrollContainer="true"
+        android:visibility="gone"
+        app:itemIconTint="@color/bottom_navigation_colors"
+        app:itemTextColor="@color/bottom_navigation_colors"
+        app:labelVisibilityMode="labeled"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:menu="@menu/bottom_navigation_menu" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

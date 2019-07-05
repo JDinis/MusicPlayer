@@ -1,21 +1,28 @@
 package pt.jdinis.musicplayer;
 
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.material.navigation.NavigationView;
 
-public class MainActivity extends AppCompatActivity {
-    private static SpecialBottomNavigationView bottomNavigationView;
+
+public class MainActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
+    private static androidx.fragment.app.FragmentManager fragmentManager;
     private static ViewPager viewPager;
     private static View mainView;
-    private static boolean firstRun = true;
 
     public static View getMainView() throws NullPointerException {
         if (mainView == null)
@@ -51,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onPageSelected(int position) {
-                    bottomNavigationView.setSelectedItemId(Constants.getSelectedMenuID(position));
+                    Home.getBottomNavigationView().setSelectedItemId(Constants.getSelectedMenuID(position));
                 }
 
                 @Override
@@ -63,28 +70,14 @@ public class MainActivity extends AppCompatActivity {
         return viewPager;
     }
 
-    public static SpecialBottomNavigationView getBottomNavigationView() {
-        if (bottomNavigationView == null) {
-            try {
-                bottomNavigationView = getMainView().findViewById(R.id.bottom_navigation_view);
-
-                return bottomNavigationView;
-            } catch (NullPointerException e) {
-                Log.e(Constants.MAINACTIVITY_TAG, "Failed to obtain a valid context.");
-            }
-        }
-
-        bottomNavigationView.setSelectedItemId(Constants.SelectedTabID);
-        return bottomNavigationView;
-    }
-
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
 
-        ActionBar supportActionBar = null;
+        /*ActionBar supportActionBar = null;
 
         try {
             supportActionBar = getSupportActionBar();
@@ -96,34 +89,76 @@ public class MainActivity extends AppCompatActivity {
             supportActionBar.setDisplayShowHomeEnabled(true);
             supportActionBar.setLogo(R.mipmap.ic_launcher);
             supportActionBar.setDisplayUseLogoEnabled(true);
-        }
+        }*/
 
-        mainView = findViewById(android.R.id.content);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        //toolbar.setLogo(R.mipmap.ic_launcher);
 
-        if (bottomNavigationView == null)
-            getBottomNavigationView();
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+        navigationView.setNavigationItemSelectedListener(this);
+
+        if (mainView == null)
+            mainView = findViewById(android.R.id.content);
 
         if (getViewPager().getAdapter() == null)
             getViewPager().setAdapter(new MyFragmentPageAdapter(getSupportFragmentManager()));
+
+        fragmentManager = getSupportFragmentManager();
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.nav_home) {
+            getViewPager().setCurrentItem(0);
+        } else if (id == R.id.nav_playlist) {
+            getViewPager().setCurrentItem(1);
+        } else if (id == R.id.nav_favorites) {
+            getViewPager().setCurrentItem(2);
+        } else if (id == R.id.nav_my_music) {
+            getViewPager().setCurrentItem(3);
+        } else if (id == R.id.nav_settings) {
+            getViewPager().setCurrentItem(4);
+        }
+
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    @Override
+    public void onResume() {
+        getViewPager().setCurrentItem(Constants.SelectedTabID);
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        if (getViewPager().getCurrentItem() != Constants.SelectedTabID)
+            Constants.SelectedTabID = getViewPager().getCurrentItem();
+
+        super.onPause();
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-    }
-
-    @Override
-    protected void onResume() {
-        getViewPager().setCurrentItem(Constants.SelectedTabID);
-        getBottomNavigationView();
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        if (getViewPager().getCurrentItem() != Constants.SelectedTabID)
-            Constants.SelectedTabID = getViewPager().getCurrentItem();
-
-        super.onPause();
     }
 }
