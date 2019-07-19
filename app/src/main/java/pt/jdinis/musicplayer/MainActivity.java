@@ -1,5 +1,7 @@
 package pt.jdinis.musicplayer;
 
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,6 +18,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.navigation.NavigationView;
+
+import static pt.jdinis.musicplayer.PlayerService.ACTION_START_PLAYER_SERVICE;
 
 
 public class MainActivity extends AppCompatActivity
@@ -94,7 +98,7 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         Toolbar toolbar = findViewById(R.id.toolbar);
-        //toolbar.setLogo(R.mipmap.ic_launcher);
+        toolbar.setLogo(R.drawable.ic_launcher_foreground);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -111,21 +115,42 @@ public class MainActivity extends AppCompatActivity
         fragmentManager = getSupportFragmentManager();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.nav_home) {
-            getViewPager().setCurrentItem(0);
-        } else if (id == R.id.nav_playlist) {
-            getViewPager().setCurrentItem(1);
-        } else if (id == R.id.nav_favorites) {
-            getViewPager().setCurrentItem(2);
-        } else if (id == R.id.nav_my_music) {
-            getViewPager().setCurrentItem(3);
-        } else if (id == R.id.nav_settings) {
-            getViewPager().setCurrentItem(4);
+        switch (id) {
+            case R.id.nav_home:
+                getViewPager().setCurrentItem(0);
+                break;
+            case R.id.nav_playlist:
+                getViewPager().setCurrentItem(1);
+                break;
+            case R.id.nav_favorites:
+                getViewPager().setCurrentItem(2);
+                break;
+            case R.id.nav_my_music:
+                getViewPager().setCurrentItem(3);
+                break;
+            case R.id.nav_settings:
+                getViewPager().setCurrentItem(4);
+                break;
+            case R.id.nav_notify:
+                Intent startIntent = new Intent(this, PlayerService.class);
+                startIntent.setAction(ACTION_START_PLAYER_SERVICE);
+
+                //startIntent.putExtra(SONG_ITEM,new SongItem()));
+                try {
+                    PendingIntent.getForegroundService(this, 0, startIntent, PendingIntent.FLAG_CANCEL_CURRENT).send();
+                } catch (PendingIntent.CanceledException e) {
+                    e.printStackTrace();
+                }
+                break;
+            default:
+                getViewPager().setCurrentItem(-1);
+                break;
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

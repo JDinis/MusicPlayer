@@ -30,7 +30,7 @@ public class MyFragmentPageAdapter extends FragmentPagerAdapter {
             case 4:
                 return Settings.newInstance();
             default:
-                return Home.newInstance();
+                return LoadingFragment.newInstance();
         }
     }
 
@@ -39,6 +39,6 @@ public class MyFragmentPageAdapter extends FragmentPagerAdapter {
      */
     @Override
     public int getCount() {
-        return 5;
+        return 6;
     }
 }

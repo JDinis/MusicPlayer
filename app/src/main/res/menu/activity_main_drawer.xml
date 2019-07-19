@@ -11,19 +11,28 @@
         <item
             android:id="@+id/nav_playlist"
             android:icon="@drawable/ic_playlist"
+            android:enabled="false"
             android:title="@string/title_playlists" />
         <item
             android:id="@+id/nav_favorites"
             android:icon="@drawable/ic_heart"
+            android:enabled="false"
             android:title="@string/title_favorites" />
         <item
             android:id="@+id/nav_my_music"
             android:icon="@drawable/ic_recent"
+            android:enabled="false"
             android:title="@string/title_my_music" />
         <item
             android:id="@+id/nav_settings"
-            android:enabled="true"
+            android:enabled="false"
             android:icon="@drawable/ic_settings"
             android:title="@string/title_settings" />
+
+        <item
+            android:id="@+id/nav_notify"
+            android:enabled="true"
+            android:icon="@drawable/ic_settings"
+            android:title="Notify" />
     </group>
 </menu>
